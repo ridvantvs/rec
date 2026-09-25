@@ -1,0 +1,14 @@
+rec. iPhone v1.6.0 — hızlı kurulum
+
+Bu paket bir PWA'dır. iPhone'a App Store gerekmeden ana ekrandan bağımsız uygulama gibi kurulur. HTTPS üzerinde yayınlanmalıdır.
+
+1) Bu klasördeki dosyaları bir GitHub reposunun kök dizinine yükle.
+2) GitHub > Settings > Pages > Source bölümünde GitHub Actions seç.
+3) Actions sekmesindeki Deploy rec. to GitHub Pages işleminin tamamlanmasını bekle.
+4) Oluşan https://KULLANICI.github.io/REPO/ adresini iPhone'da SAFARI ile aç.
+5) Safari > Paylaş > Ana Ekrana Ekle > Web Uygulaması Olarak Aç > Ekle.
+6) Ana ekrandaki rec. ikonunu aç.
+7) İlk açılışta Mac'te kullandığın aynı Supabase Project URL + Publishable Key'i gir.
+8) Mac'te kullandığın aynı rec./Google hesabıyla giriş yap. Veriler senkronize olur.
+
+NOT: service_role / secret key kullanma.
