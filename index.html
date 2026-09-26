@@ -158,7 +158,7 @@ html[data-rec-theme="gray"] .kalf-brand-cta,html[data-rec-theme="light"] .kalf-b
 <script>
 (()=>{'use strict';
 const KEY='rec.standalone.v1';
-const VERSION='1.13.0';
+const VERSION='1.13.1';
 const CLOUD_CONFIG_KEY='rec.cloud.config.v1';
 const CLOUD_SESSION_KEY='rec.cloud.session.v1';
 const CLOUD_STATE_KEY='rec.cloud.state.v1';
@@ -1081,6 +1081,9 @@ function currentDisplayName(){
   const e=String(u.email||'').split('@')[0].trim();
   return e?e.charAt(0).toLocaleUpperCase('tr-TR')+e.slice(1):'Kullanıcı';
 }
+function personalAreaName(){const n=currentDisplayName();return n&&n!=='Kullanıcı'?n:'Kişisel Profil'}
+function areaName(){if(activeArea?.type==='workspace')return activeWorkspace()?.name||'Workspace';return personalAreaName()}
+function areaMeta(){if(activeArea?.type==='workspace')return ROLE_LABELS[activeWorkspaceRole()]||activeWorkspaceRole()||'Ortak';return startMode==='cloud'?'Kişisel · Bulut':'Kişisel · Bu cihaz'}
 function activeWorkspace(){return wsCatalog.find(w=>w.workspace_id===wsCtx.activeId)||null}
 function activeWorkspaceName(){if(startMode==='local')return'Yerel Çalışma Alanı';return activeWorkspace()?.name||'Workspace seçilmedi'}
 function activeWorkspaceRole(){return startMode==='local'?'owner':activeWorkspace()?.role||''}
@@ -1645,9 +1648,18 @@ bind=function(){
 
 render=function(){
   v111ForceCloudConfig();
-  if(!sessionValid()){document.getElementById('app').innerHTML=authScreen();bind();return}
-  startMode='cloud';
-  renderV110Base();
+  try{
+    if(!sessionValid()){document.getElementById('app').innerHTML=authScreen();bind();return}
+    startMode='cloud';
+    renderV110Base();
+  }catch(e){
+    console.error('rec render error',e);
+    storeSession(null);
+    ui.authMode='login';
+    ui.authError='Oturum görünümü yenilendi. Lütfen tekrar giriş yap.';
+    document.getElementById('app').innerHTML=authScreen();
+    bind();
+  }
 };
 
 
