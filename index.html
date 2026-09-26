@@ -158,7 +158,7 @@ html[data-rec-theme="gray"] .kalf-brand-cta,html[data-rec-theme="light"] .kalf-b
 <script>
 (()=>{'use strict';
 const KEY='rec.standalone.v1';
-const VERSION='1.13.2';
+const VERSION='1.14.0';
 const CLOUD_CONFIG_KEY='rec.cloud.config.v1';
 const CLOUD_SESSION_KEY='rec.cloud.session.v1';
 const CLOUD_STATE_KEY='rec.cloud.state.v1';
@@ -956,8 +956,8 @@ function deleteCalendarEvent(id){const x=data.calendarEvents.find(e=>e.id===id);
 function calendarView(){
   ensureV160();const md=calendarMonthDate(),y=md.getFullYear(),m=md.getMonth();const first=new Date(y,m,1,12),offset=(first.getDay()+6)%7;const start=new Date(y,m,1-offset,12);const today=dateISO();const selected=ui.calendarSelected||today;const monthName=new Intl.DateTimeFormat('tr-TR',{month:'long',year:'numeric'}).format(md);
   const weekday=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];let cells='';
-  for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);const ds=dateISO(d),evs=calendarEventsOn(ds);const cls=[d.getMonth()!==m?'outside':'',ds===today?'today':'',ds===selected?'selected':''].filter(Boolean).join(' ');cells+=`<button class="calendar-day ${cls}" data-calendar-day="${ds}"><span class="calendar-day-num">${d.getDate()}</span>${evs.slice(0,3).map(ev=>`<span class="calendar-event-chip ${ev.kind==='shoot'?'shoot':ev.kind==='delivery'?'delivery':'custom'}" data-calendar-chip="${esc(ev.eventKey)}" title="${esc(ev.title)}">${esc(ev.startTime?ev.startTime+' ':'' )}${esc(ev.title)}</span>`).join('')}${evs.length>3?`<span class="calendar-more">+${evs.length-3} daha</span>`:''}</button>`}
-  const dayEvents=calendarEventsOn(selected);const agenda=dayEvents.map(ev=>`<div class="agenda-event"><header><div><b>${esc(ev.title)}</b><small>${esc(ev.label||ev.kind)}${ev.startTime?` · ${esc(ev.startTime)}${ev.endTime?'–'+esc(ev.endTime):''}`:''}${ev.location?` · ${esc(ev.location)}`:''}</small></div><span class="agenda-dot ${ev.kind==='shoot'?'shoot':ev.kind==='delivery'?'delivery':'custom'}"></span></header><div class="agenda-actions">${ev.source==='project'?`<button class="btn small" data-calendar-open-project="${ev.projectId}">Projeyi Aç</button>`:`<button class="btn small" data-calendar-edit="${ev.id}">Düzenle</button>`}<button class="btn small" data-google-calendar="${esc(ev.eventKey)}"><span class="google-g">G</span> Calendar</button></div></div>`).join('')||'<div class="calendar-empty">Bu günde etkinlik yok.</div>';
+  for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);const ds=dateISO(d),evs=calendarEventsOn(ds);const cls=[d.getMonth()!==m?'outside':'',ds===today?'today':'',ds===selected?'selected':''].filter(Boolean).join(' ');cells+=`<button class="calendar-day ${cls}" data-calendar-day="${ds}"><span class="calendar-day-num">${d.getDate()}</span>${evs.slice(0,3).map(ev=>`<span class="calendar-event-chip ${ev.kind==='shoot'?'shoot':ev.kind==='delivery'?'delivery':ev.source==='google'?'google':'custom'}" data-calendar-chip="${esc(ev.eventKey)}" title="${esc(ev.title)}">${esc(ev.startTime?ev.startTime+' ':'' )}${esc(ev.title)}</span>`).join('')}${evs.length>3?`<span class="calendar-more">+${evs.length-3} daha</span>`:''}</button>`}
+  const dayEvents=calendarEventsOn(selected);const agenda=dayEvents.map(ev=>`<div class="agenda-event"><header><div><b>${esc(ev.title)}</b><small>${esc(ev.label||ev.kind)}${ev.startTime?` · ${esc(ev.startTime)}${ev.endTime?'–'+esc(ev.endTime):''}`:''}${ev.location?` · ${esc(ev.location)}`:''}</small></div><span class="agenda-dot ${ev.kind==='shoot'?'shoot':ev.kind==='delivery'?'delivery':ev.source==='google'?'google':'custom'}"></span></header><div class="agenda-actions">${ev.source==='project'?`<button class="btn small" data-calendar-open-project="${ev.projectId}">Projeyi Aç</button>`:ev.source==='google'?`<button class="btn small" data-google-open-event="${esc(ev.eventKey)}">Google'da Aç</button>`:`<button class="btn small" data-calendar-edit="${ev.id}">Düzenle</button>`}${ev.source!=='google'?`<button class="btn small" data-google-calendar="${esc(ev.eventKey)}"><span class="google-g">G</span> Calendar</button>`:''}</div></div>`).join('')||'<div class="calendar-empty">Bu günde etkinlik yok.</div>';
   const next7=allCalendarEvents().filter(ev=>ev.kind==='shoot'&&ev.date>=today&&ev.date<=future(7));const filter=ui.calendarFilter==='shoot7'?`<div class="calendar-filter-banner"><span>Önümüzdeki 7 gündeki çekimler gösteriliyor · ${next7.length} proje</span><button class="btn small" data-calendar-clear-filter>Filtreyi Kapat</button></div>`:'';
   return `<div class="hero"><div class="eyebrow">TAKVİM</div><h1>Prodüksiyon Takvimi</h1></div>${filter}<div class="calendar-shell"><section class="panel calendar-main"><div class="calendar-toolbar"><div class="calendar-toolbar-left"><button class="btn small" data-calendar-prev>‹</button><button class="btn small" data-calendar-today>Bugün</button><button class="btn small" data-calendar-next>›</button><span class="calendar-month-title">${esc(monthName)}</span></div><div class="calendar-toolbar-right"><button class="btn" data-calendar-export>.ics Dışa Aktar</button><button class="btn primary" data-calendar-new>+ Etkinlik</button></div></div><div class="calendar-weekdays">${weekday.map(x=>`<div>${x}</div>`).join('')}</div><div class="calendar-grid">${cells}</div></section><aside class="panel calendar-agenda"><div class="eyebrow">GÜN AJANDASI</div><h3>${new Intl.DateTimeFormat('tr-TR',{day:'numeric',month:'long',weekday:'long'}).format(new Date(selected+'T12:00:00'))}</h3><p class="muted small">${dayEvents.length} etkinlik</p>${agenda}${ui.calendarFilter==='shoot7'?`<div style="height:14px;border-top:1px solid var(--line);margin-top:14px"></div><div class="eyebrow">7 GÜNDE ÇEKİM</div>${next7.map(ev=>`<div class="agenda-event"><b>${esc(ev.title)}</b><small>${fmtDate(ev.date)} · ${esc(ev.location||'')}</small><div class="agenda-actions"><button class="btn small" data-calendar-day-jump="${ev.date}">Göster</button></div></div>`).join('')||'<div class="calendar-empty">Yaklaşan çekim yok.</div>'}`:''}</aside></div>`
 }
@@ -1286,7 +1286,7 @@ render=function(){
 // ===== rec. v1.9.0 — personal/workspace launcher + native Google Calendar =====
 const AREA_SESSION_KEY='rec.area.session.v1';
 const PERSONAL_CACHE_KEY='rec.personal.cache.v1';
-const GOOGLE_CAL_KEY='rec.google.calendar.disabled';
+const GOOGLE_CAL_KEY='rec.google.calendar.v1';
 let activeArea=(()=>{try{return JSON.parse(sessionStorage.getItem(AREA_SESSION_KEY)||'null')}catch{return null}})();
 let areaSelecting=false, areaReady=false;
 let googleCal=jsonRead(GOOGLE_CAL_KEY,{providerToken:'',providerRefreshToken:'',expiresAt:0,account:'',calendars:[],events:[],rangeKey:'',updatedAt:''});
@@ -1386,11 +1386,31 @@ shell=function(body){
 const saveV190AreaBase=save;
 save=function(markDirty=true){const r=saveV190AreaBase(markDirty);if(activeArea?.type==='personal')cachePersonalPayload(data);return r};
 
-// Google Calendar (read-only). Native desktop auth returns via rec://auth/callback.
-function persistGoogleCal(){return false}
-async function googleApi(){throw new Error('Google Calendar bu sürümde devre dışı.')}
-function googleCalendarConnected(){return false}
-function googleCalendarDisconnect(){googleCal={providerToken:'',providerRefreshToken:'',expiresAt:0,account:'',calendars:[],events:[],rangeKey:'',updatedAt:''};persistGoogleCal();render();toast(' bağlantısı kaldırıldı.')}
+// Google Calendar. Only short-lived provider access is kept; Google client secrets
+// never enter this browser bundle.
+function persistGoogleCal(){
+  const safe={...googleCal,providerRefreshToken:''};
+  localStorage.setItem(GOOGLE_CAL_KEY,JSON.stringify(safe));
+}
+function googleCalendarConnected(){return !!(googleCal.providerToken&&Number(googleCal.expiresAt||0)>Math.floor(Date.now()/1000)+30)}
+function googleCalendarClearAccess(){googleCal.providerToken='';googleCal.providerRefreshToken='';googleCal.expiresAt=0;googleCal.rangeKey='';persistGoogleCal()}
+function googleCalendarError(status,j){
+  const m=String(j?.error?.message||j?.message||'');
+  if(status===401)return new Error('Google Takvim bağlantısının süresi doldu. Yeniden bağlan.');
+  if(status===403&&/accessNotConfigured|has not been used|disabled/i.test(m))return new Error('Google Calendar API bu Google Cloud projesinde etkin değil.');
+  if(status===403)return new Error('Bu Google takviminde yazma yetkin yok veya gerekli izin verilmedi.');
+  return new Error(m||`Google Calendar HTTP ${status}`)
+}
+async function googleApi(path,opt={}){
+  if(!googleCalendarConnected()){googleCalendarClearAccess();throw new Error('Google Takvim bağlantısının süresi doldu. Yeniden bağlan.')}
+  const headers={Authorization:'Bearer '+googleCal.providerToken,'Content-Type':'application/json',...(opt.headers||{})};
+  const r=await fetch('https://www.googleapis.com/calendar/v3'+path,{...opt,headers});
+  if(r.status===204)return null;
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok){if(r.status===401)googleCalendarClearAccess();throw googleCalendarError(r.status,j)}
+  return j
+}
+function googleCalendarDisconnect(){googleCal={providerToken:'',providerRefreshToken:'',expiresAt:0,account:'',calendars:[],events:[],rangeKey:'',updatedAt:'',selectedCalendarId:''};localStorage.removeItem(GOOGLE_CAL_KEY);render();toast('Google Takvim bağlantısı kaldırıldı.')}
 async function handleNativeOAuthCallback(raw){
   try{
     const u=new URL(String(raw));const q=new URLSearchParams((u.hash||'').replace(/^#/,''));
@@ -1731,6 +1751,148 @@ render=function(){
     document.getElementById('app').innerHTML=authScreen();
     bind();
   }
+};
+
+// ===== rec. v1.14.0 — Google Calendar import + write-through =====
+const GOOGLE_CAL_OAUTH_PENDING='rec.google.calendar.oauth.pending';
+let googleWriteBusy=false;
+
+recGoogleOAuthUrl=function(withCalendar=false){
+  const scopes=['openid','email','profile'];
+  if(withCalendar)scopes.push('https://www.googleapis.com/auth/calendar.readonly','https://www.googleapis.com/auth/calendar.events');
+  const qp=withCalendar?'access_type=offline&prompt=consent&include_granted_scopes=true':'prompt=select_account';
+  return cleanUrl(cloudConfig.url)+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(location.origin+location.pathname)+'&scopes='+encodeURIComponent(scopes.join(' '))+'&query_params='+encodeURIComponent(qp);
+};
+googleOAuthUrl=function(){return recGoogleOAuthUrl(true)};
+function googleCalendarConnect(){
+  if(location.protocol==='file:')return toast('Google Takvim bağlantısını HTTPS web sürümünden başlat.');
+  sessionStorage.setItem(GOOGLE_CAL_OAUTH_PENDING,'1');
+  location.assign(googleOAuthUrl());
+}
+
+const consumeOAuthCallbackV114Base=consumeOAuthCallback;
+consumeOAuthCallback=async function(){
+  const pending=sessionStorage.getItem(GOOGLE_CAL_OAUTH_PENDING)==='1';
+  const q=new URLSearchParams((location.hash||'').replace(/^#/,''));
+  const provider=q.get('provider_token')||'';
+  const expires=Number(q.get('expires_in')||3600);
+  const ok=await consumeOAuthCallbackV114Base();
+  if(pending){
+    sessionStorage.removeItem(GOOGLE_CAL_OAUTH_PENDING);
+    if(provider){
+      googleCal.providerToken=provider;googleCal.providerRefreshToken='';
+      googleCal.expiresAt=Math.floor(Date.now()/1000)+Math.max(300,Math.min(expires,3500));
+      googleCal.account=cloudSession?.user?.email||'';googleCal.rangeKey='';googleCal.events=[];googleCal.calendars=[];
+      persistGoogleCal();
+      setTimeout(()=>googleLoadVisibleMonth(true),300);
+      toast('Google Takvim bağlandı.');
+    }else toast('Google Takvim izni alınamadı. Bağlantıyı yeniden dene.');
+  }
+  return ok
+};
+
+const googleListCalendarsV114Base=googleListCalendars;
+googleListCalendars=async function(){
+  const list=await googleListCalendarsV114Base();
+  const writable=list.filter(c=>['owner','writer'].includes(c.accessRole));
+  if(!writable.some(c=>c.id===googleCal.selectedCalendarId))googleCal.selectedCalendarId=(writable.find(c=>c.primary)||writable[0])?.id||'';
+  persistGoogleCal();return list
+};
+
+function googleWritableCalendars(){return (googleCal.calendars||[]).filter(c=>['owner','writer'].includes(c.accessRole))}
+function googleSelectedCalendarId(){return googleCal.selectedCalendarId||googleWritableCalendars().find(c=>c.primary)?.id||googleWritableCalendars()[0]?.id||'primary'}
+function googleEventBody(x){
+  let start,end;
+  if(x.startTime){
+    const st=new Date(`${x.date}T${x.startTime}:00`);let en=new Date(`${x.date}T${x.endTime||x.startTime}:00`);
+    if(!Number.isFinite(en.getTime())||en<=st)en=new Date(st.getTime()+60*60*1000);
+    start={dateTime:st.toISOString()};end={dateTime:en.toISOString()};
+  }else{start={date:x.date};end={date:datePlus(x.date,1)}}
+  return {summary:x.title,location:x.location||'',description:[x.kind?`rec. türü: ${x.kind}`:'',x.notes||''].filter(Boolean).join('\n'),start,end,extendedProperties:{private:{recEventId:x.id,recSource:'rec-web'}}}
+}
+async function googleUpsertLocalEvent(x,calendarId){
+  const target=calendarId||x.googleCalendarId||googleSelectedCalendarId();
+  if(!target)throw new Error('Yazılabilir bir Google takvimi bulunamadı.');
+  const existing=x.googleEventId;
+  const path='/calendars/'+encodeURIComponent(target)+'/events'+(existing?'/'+encodeURIComponent(existing):'');
+  const ev=await googleApi(path,{method:existing?'PATCH':'POST',body:JSON.stringify(googleEventBody(x))});
+  x.googleEventId=ev.id;x.googleCalendarId=target;x.googleHtmlLink=ev.htmlLink||x.googleHtmlLink||'';x.googleSyncPending=false;x.googleSyncedAt=iso();
+  googleCal.rangeKey='';persistGoogleCal();return ev
+}
+async function googleDeleteLocalEvent(x){
+  if(!x.googleEventId)return true;
+  await googleApi('/calendars/'+encodeURIComponent(x.googleCalendarId||googleSelectedCalendarId())+'/events/'+encodeURIComponent(x.googleEventId),{method:'DELETE'});
+  googleCal.events=(googleCal.events||[]).filter(e=>e.id!==x.googleEventId);googleCal.rangeKey='';persistGoogleCal();return true
+}
+
+googleEventToRec=function(ev,cal){
+  const allDay=!!ev.start?.date;const st=allDay?new Date(ev.start.date+'T12:00:00'):new Date(ev.start?.dateTime||ev.start?.date||Date.now());const en=allDay?null:new Date(ev.end?.dateTime||ev.start?.dateTime||Date.now());
+  return {id:ev.id,eventKey:'google:'+cal.id+':'+ev.id,source:'google',kind:'google',googleCalendarId:cal.id,title:ev.summary||'(Başlıksız)',date:allDay?ev.start.date:dateISO(st),startTime:allDay?'':st.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',hour12:false}),endTime:allDay?'':en.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',hour12:false}),location:ev.location||'',notes:ev.description||'',label:'Google · '+cal.summary,calendarName:cal.summary,htmlLink:ev.htmlLink||'',status:ev.status||''};
+};
+const allCalendarEventsV114Base=allCalendarEvents;
+allCalendarEvents=function(){
+  const linked=new Set((data.calendarEvents||[]).filter(x=>x.googleEventId).map(x=>(x.googleCalendarId||'primary')+':'+x.googleEventId));
+  return allCalendarEventsV114Base().filter(x=>x.source!=='google'||!linked.has((x.googleCalendarId||'primary')+':'+x.id))
+};
+
+calendarEventModal=function(id='',defaultDate=''){
+  const old=(data.calendarEvents||[]).find(x=>x.id===id);const x=old||{id:'',title:'',date:defaultDate||ui.calendarSelected||dateISO(),startTime:'09:00',endTime:'10:00',kind:'Etkinlik',location:'',notes:'',projectId:''};
+  const projectOptions=`<option value="">Proje bağlantısı yok</option>${selectableProjects().map(p=>`<option value="${p.id}" ${p.id===x.projectId?'selected':''}>${esc(p.client)} — ${esc(p.name)}</option>`).join('')}`;
+  const writable=googleWritableCalendars(),selected=x.googleCalendarId||googleSelectedCalendarId();
+  const google=x.googleEventId?`<div class="field full"><label>Google Takvim</label><div class="google-calendar-status connected"><i></i>Bağlı · değişiklikler Google'a da kaydedilir</div><input type="hidden" name="googleSync" value="on"><input type="hidden" name="googleCalendarId" value="${esc(selected)}"></div>`:googleCalendarConnected()?`<div class="field full"><label class="check" style="display:flex;align-items:center;gap:8px"><input type="checkbox" name="googleSync" checked> Google Takvim'e de ekle</label><select name="googleCalendarId">${writable.map(c=>`<option value="${esc(c.id)}" ${c.id===selected?'selected':''}>${esc(c.summary)}${c.primary?' · Birincil':''}</option>`).join('')||'<option value="primary">Birincil takvim</option>'}</select></div>`:`<div class="field full"><label>Google Takvim</label><small class="muted">Takvim ekranından bağladığında yeni etkinlikleri Google'a da gönderebilirsin.</small></div>`;
+  const body=`<form id="calendarEventForm"><div class="form-grid">${field('title','Etkinlik adı',x.title)}${field('kind','Tür',x.kind,'select',['Etkinlik','Toplantı','Çekim','Teslim','Diğer'])}${field('date','Tarih',x.date,'date')}${field('startTime','Başlangıç',x.startTime||'','time')}${field('endTime','Bitiş',x.endTime||'','time')}${field('location','Konum',x.location||'')}<div class="field full"><label>Bağlı proje</label><select name="projectId">${projectOptions}</select></div>${field('notes','Not',x.notes||'','textarea')}${google}</div></form>`;
+  const actions=`${id?`<button class="btn danger" data-delete-calendar-event="${id}">Sil</button>`:''}<span class="spacer"></span><button class="btn" data-act="closeModal">Vazgeç</button><button class="btn primary" data-save-calendar-event="${id}" ${googleWriteBusy?'disabled':''}>${googleWriteBusy?'Kaydediliyor…':'Kaydet'}</button>`;
+  return modalWrap(id?'Etkinliği Düzenle':'Yeni Etkinlik',body,actions)
+};
+
+saveCalendarEvent=async function(id=''){
+  if(googleWriteBusy)return;
+  const form=document.getElementById('calendarEventForm');if(!form)return;const f=Object.fromEntries(new FormData(form).entries());if(!String(f.title||'').trim()||!f.date)return toast('Etkinlik adı ve tarih gerekli.');
+  const old=(data.calendarEvents||[]).find(x=>x.id===id);const x={...old,id:id||uid(),title:String(f.title).trim(),kind:f.kind||'custom',date:f.date,startTime:f.startTime||'',endTime:f.endTime||'',location:f.location||'',notes:f.notes||'',projectId:f.projectId||'',createdAt:old?.createdAt||iso(),updatedAt:iso()};
+  const wantsGoogle=!!old?.googleEventId||f.googleSync==='on';
+  const i=data.calendarEvents.findIndex(e=>e.id===id);i>=0?data.calendarEvents[i]=x:data.calendarEvents.push(x);v150Log(`Takvim etkinliği ${id?'güncellendi':'eklendi'}: ${x.title}`,x.projectId||'');save();
+  if(wantsGoogle){
+    googleWriteBusy=true;render();
+    try{await googleUpsertLocalEvent(x,f.googleCalendarId||x.googleCalendarId);save();toast("Etkinlik rec. ve Google Takvim'e kaydedildi.");setTimeout(()=>googleLoadVisibleMonth(true),50)}
+    catch(e){x.googleSyncPending=true;save();toast(e.message||'Etkinlik rec.’e kaydedildi; Google Takvim’e gönderilemedi.')}
+    finally{googleWriteBusy=false}
+  }else toast('Takvim etkinliği kaydedildi.');
+  ui.modal=null;ui.calendarSelected=x.date;ui.calendarMonth=x.date.slice(0,7);render()
+};
+deleteCalendarEvent=async function(id){
+  const x=data.calendarEvents.find(e=>e.id===id);if(!x||googleWriteBusy)return;
+  if(x.googleEventId){
+    if(!googleCalendarConnected())return toast("Google'daki etkinliği de silmek için Google Takvim'i yeniden bağla.");
+    googleWriteBusy=true;try{await googleDeleteLocalEvent(x)}catch(e){googleWriteBusy=false;return toast(e.message||'Google Takvim etkinliği silinemedi.')}googleWriteBusy=false;
+  }
+  addTrashItem('calendarEvents',x.title,{entity:{...x,googleEventId:'',googleCalendarId:'',googleHtmlLink:''}});data.calendarEvents=data.calendarEvents.filter(e=>e.id!==id);save();ui.modal=null;render();toast(x.googleEventId?'Etkinlik rec. ve Google Takvim’den silindi.':'Etkinlik çöp kutusuna taşındı.')
+};
+
+function googleCalendarPanel(){
+  if(!googleCalendarConnected())return `<section class="panel" style="margin-bottom:14px"><div class="eyebrow">GOOGLE TAKVİM</div><h3 style="margin:5px 0">Takvimlerini rec. ile birleştir</h3><p class="muted small">Google etkinliklerini burada gör; rec. içinde oluşturduklarını seçtiğin Google takvimine gönder.</p><button class="btn google-btn" data-google-connect><span class="google-g">G</span> Google Takvim'i Bağla</button></section>`;
+  const writable=googleWritableCalendars();
+  return `<section class="panel" style="margin-bottom:14px"><div class="google-calendar-bar"><span class="google-calendar-status connected"><i></i>${esc(googleCal.account||'Google Takvim bağlı')}</span><select data-google-calendar-select style="max-width:260px">${writable.map(c=>`<option value="${esc(c.id)}" ${c.id===googleSelectedCalendarId()?'selected':''}>${esc(c.summary)}${c.primary?' · Birincil':''}</option>`).join('')||'<option value="primary">Birincil takvim</option>'}</select><button class="btn small" data-google-refresh ${googleCalBusy?'disabled':''}>${googleCalBusy?'Yükleniyor…':'Yenile'}</button><button class="btn small" data-google-disconnect>Bağlantıyı Kaldır</button></div><p class="calendar-sync-note">${googleCal.updatedAt?'Son alınan: '+new Date(googleCal.updatedAt).toLocaleString('tr-TR'):'Etkinlikler yükleniyor…'} · Yeni rec. etkinlikleri seçili takvime gider.</p></section>`
+}
+const calendarViewV114Base=calendarView;
+calendarView=function(){
+  if(googleCalendarConnected()&&!googleCalBusy&&googleCal.rangeKey!==visibleCalendarRange().key)setTimeout(()=>googleLoadVisibleMonth(false),0);
+  return googleCalendarPanel()+calendarViewV114Base()
+};
+
+const actionV114Base=action;
+action=function(a){
+  if(a==='googleCalendarConnect'){googleCalendarConnect();return}
+  if(a==='googleCalendarDisconnect'){googleCalendarDisconnect();return}
+  if(a==='googleCalendarRefresh'){googleLoadVisibleMonth(true);return}
+  actionV114Base(a)
+};
+const bindV114Base=bind;
+bind=function(){
+  bindV114Base();
+  document.querySelectorAll('[data-google-connect]').forEach(b=>b.onclick=googleCalendarConnect);
+  document.querySelectorAll('[data-google-refresh]').forEach(b=>b.onclick=()=>googleLoadVisibleMonth(true));
+  document.querySelectorAll('[data-google-disconnect]').forEach(b=>b.onclick=googleCalendarDisconnect);
+  document.querySelectorAll('[data-google-calendar-select]').forEach(s=>s.onchange=()=>{googleCal.selectedCalendarId=s.value;persistGoogleCal();toast('Google hedef takvimi güncellendi.')});
 };
 
 
