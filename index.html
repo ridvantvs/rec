@@ -4,8 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#0b0b0c" />
-<title>rec. — Private Beta</title>
-<meta name="robots" content="noindex,nofollow,noarchive" />
+<title>rec.</title>
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="apple-touch-icon" href="icon-192.png" />
 <link rel="icon" type="image/png" href="rec-icon.png" />
@@ -97,70 +96,69 @@
 
 </style>
 
-<style id="rec-beta-style">
-body.beta-locked{overflow:hidden;background:#0b0b0c}
-body.beta-locked #app{display:none!important}
-#recBetaGate{position:fixed;inset:0;z-index:99999;background:#0b0b0c;color:#f5f5f5;display:flex;align-items:center;justify-content:center;padding:24px;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-#recBetaGate[hidden]{display:none!important}
-.rec-beta-card{width:min(460px,100%);border:1px solid rgba(255,255,255,.12);background:#111214;border-radius:24px;padding:30px;box-shadow:0 24px 80px rgba(0,0,0,.38)}
-.rec-beta-logo{font-size:42px;line-height:1;font-weight:800;letter-spacing:-2px}.rec-beta-logo span{opacity:.65}.rec-beta-owner{font-size:11px;letter-spacing:.14em;text-transform:lowercase;color:#8f9398;margin-top:7px}.rec-beta-kicker{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#8f9398;margin-top:34px}.rec-beta-card h1{font-size:28px;line-height:1.12;letter-spacing:-.03em;margin:10px 0}.rec-beta-card p{color:#a7abb0;line-height:1.55;margin:0 0 22px}.rec-beta-row{display:flex;gap:10px}.rec-beta-input{flex:1;min-width:0;background:#0b0b0c;color:#fff;border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:13px 14px;font:inherit;outline:none}.rec-beta-input:focus{border-color:#fff}.rec-beta-btn{border:0;border-radius:12px;background:#fff;color:#111;font-weight:700;padding:13px 17px;cursor:pointer}.rec-beta-msg{min-height:18px;margin-top:12px;font-size:12px;color:#ff9b9b}.rec-beta-note{font-size:11px;color:#666d73;margin-top:20px}.rec-beta-forget{margin-top:14px;background:transparent;border:0;color:#8f9398;padding:0;cursor:pointer;font:inherit;font-size:12px}
-@media(max-width:520px){.rec-beta-card{padding:24px;border-radius:20px}.rec-beta-row{flex-direction:column}.rec-beta-btn{width:100%}}
+
+<style id="rec-theme-styles">
+/* rec. v1.13 — theme system */
+.theme-control{position:relative}
+.theme-toggle{height:42px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:11px;padding:0 12px;display:flex;align-items:center;gap:8px;font:inherit}
+.theme-toggle:hover{filter:brightness(1.06)}
+.theme-toggle i{font-style:normal;font-size:16px}
+.theme-toggle b{font-size:10px;letter-spacing:.02em}
+.theme-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:160px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:7px;box-shadow:var(--shadow);z-index:120}
+.theme-menu button{width:100%;border:0;background:transparent;color:var(--text);text-align:left;padding:9px 10px;border-radius:8px;font:inherit}
+.theme-menu button:hover,.theme-menu button.active{background:rgba(127,127,127,.14)}
+.theme-menu small{display:block;color:var(--muted);font-size:9px;margin-top:1px}
+
+html[data-rec-theme="gray"]{
+  --bg:#d9dade;--panel:#e9eaec;--panel2:#f2f2f3;--line:#c4c6ca;--muted:#686b70;--text:#18191c;
+  --shadow:0 18px 60px rgba(31,34,39,.12)
+}
+html[data-rec-theme="light"]{
+  --bg:#f5f5f6;--panel:#ffffff;--panel2:#f3f3f4;--line:#dedee1;--muted:#73757a;--text:#171719;
+  --shadow:0 18px 60px rgba(20,22,25,.10)
+}
+
+/* hard-coded dark yüzeyler için açık tema düzeltmeleri */
+html[data-rec-theme="gray"] body,html[data-rec-theme="light"] body{background:var(--bg);color:var(--text)}
+html[data-rec-theme="gray"] .sidebar,html[data-rec-theme="light"] .sidebar{background:var(--panel)}
+html[data-rec-theme="gray"] .topbar,html[data-rec-theme="light"] .topbar{background:color-mix(in srgb,var(--bg) 92%, transparent)}
+html[data-rec-theme="gray"] .panel,html[data-rec-theme="gray"] .card,
+html[data-rec-theme="light"] .panel,html[data-rec-theme="light"] .card{background:var(--panel);box-shadow:0 1px 0 rgba(0,0,0,.03) inset}
+html[data-rec-theme="gray"] .btn,html[data-rec-theme="light"] .btn{background:var(--panel2);border-color:var(--line);color:var(--text)}
+html[data-rec-theme="gray"] .btn.primary,html[data-rec-theme="light"] .btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+html[data-rec-theme="gray"] input,html[data-rec-theme="gray"] select,html[data-rec-theme="gray"] textarea,
+html[data-rec-theme="light"] input,html[data-rec-theme="light"] select,html[data-rec-theme="light"] textarea{background:var(--panel2)!important;color:var(--text)!important;border-color:var(--line)!important}
+html[data-rec-theme="gray"] .auth-screen,html[data-rec-theme="light"] .auth-screen{background:radial-gradient(circle at 50% -10%,rgba(0,0,0,.08) 0,var(--bg) 42%)}
+html[data-rec-theme="gray"] .auth-card,html[data-rec-theme="light"] .auth-card{background:var(--panel);border-color:var(--line)}
+html[data-rec-theme="gray"] .modal,html[data-rec-theme="gray"] .modal-head,html[data-rec-theme="gray"] .palette,
+html[data-rec-theme="light"] .modal,html[data-rec-theme="light"] .modal-head,html[data-rec-theme="light"] .palette{background:var(--panel);border-color:var(--line)}
+html[data-rec-theme="gray"] .profile-button,html[data-rec-theme="gray"] .profile-popover,
+html[data-rec-theme="light"] .profile-button,html[data-rec-theme="light"] .profile-popover{background:var(--panel);color:var(--text);border-color:var(--line)}
+html[data-rec-theme="gray"] .profile-avatar,html[data-rec-theme="gray"] .area-avatar,
+html[data-rec-theme="light"] .profile-avatar,html[data-rec-theme="light"] .area-avatar{background:var(--panel2);color:var(--text);border-color:var(--line)}
+html[data-rec-theme="gray"] .area-menu,html[data-rec-theme="light"] .area-menu{background:var(--panel);border-color:var(--line)}
+html[data-rec-theme="gray"] .area-option,html[data-rec-theme="light"] .area-option{color:var(--text)}
+html[data-rec-theme="gray"] .row,html[data-rec-theme="light"] .row{border-color:var(--line)}
+html[data-rec-theme="gray"] table,html[data-rec-theme="light"] table{background:var(--panel)}
+html[data-rec-theme="gray"] th,html[data-rec-theme="light"] th{background:var(--panel2);color:var(--muted)}
+html[data-rec-theme="gray"] td,html[data-rec-theme="light"] td{border-color:var(--line)}
+html[data-rec-theme="gray"] .folder-tree,html[data-rec-theme="gray"] .codebox,html[data-rec-theme="gray"] .check,html[data-rec-theme="gray"] .note,
+html[data-rec-theme="light"] .folder-tree,html[data-rec-theme="light"] .codebox,html[data-rec-theme="light"] .check,html[data-rec-theme="light"] .note{background:var(--panel2);color:var(--text);border-color:var(--line)}
+html[data-rec-theme="gray"] .bottom-nav,html[data-rec-theme="light"] .bottom-nav{background:color-mix(in srgb,var(--panel) 95%, transparent)}
+html[data-rec-theme="gray"] .google-btn,html[data-rec-theme="light"] .google-btn{background:#fff;color:#171717;border-color:#d7d7da}
+html[data-rec-theme="gray"] .workspace-switcher,html[data-rec-theme="light"] .workspace-switcher{background:var(--panel2);color:var(--text);border-color:var(--line)}
+html[data-rec-theme="gray"] .kalf-brand-cta,html[data-rec-theme="light"] .kalf-brand-cta{background:linear-gradient(135deg,#fff3f2,var(--panel2));border-color:#e5bbb8;color:#271514!important}
+@media(max-width:950px){.theme-toggle{width:42px;padding:0;justify-content:center}.theme-toggle b{display:none}.theme-menu{right:0}}
 </style>
+
 </head>
 <body>
-
-<div id="recBetaGate" aria-label="rec. Private Beta">
-  <div class="rec-beta-card">
-    <div class="rec-beta-logo">rec<span>.</span></div>
-    <div class="rec-beta-owner">by kalfmedia</div>
-    <div class="rec-beta-kicker">PRIVATE BETA</div>
-    <h1>rec. şu anda davetli kullanıma açık.</h1>
-    <p>Devam etmek için beta erişim kodunu gir.</p>
-    <div class="rec-beta-row">
-      <input id="recBetaCode" class="rec-beta-input" type="password" autocomplete="one-time-code" placeholder="Beta erişim kodu" />
-      <button id="recBetaEnter" class="rec-beta-btn" type="button">Devam Et</button>
-    </div>
-    <div id="recBetaMessage" class="rec-beta-msg" role="status"></div>
-    <div class="rec-beta-note">getrec.app hazırlanana kadar bu adres Private Beta olarak kullanılacak.</div>
-  </div>
-</div>
-<script>
-(function(){
-  'use strict';
-  const ACCESS_KEY='rec.private.beta.v1';
-  const EXPECTED='1090169a284e00a44c0602e8c2adca382dac51739b5d7e1cdbd8fe1e51508132';
-  document.body.classList.add('beta-locked');
-  const gate=document.getElementById('recBetaGate');
-  const input=document.getElementById('recBetaCode');
-  const button=document.getElementById('recBetaEnter');
-  const msg=document.getElementById('recBetaMessage');
-  function unlock(){localStorage.setItem(ACCESS_KEY,'ok');document.body.classList.remove('beta-locked');gate.hidden=true;}
-  async function digest(value){
-    const bytes=new TextEncoder().encode(String(value||'').trim());
-    const hash=await crypto.subtle.digest('SHA-256',bytes);
-    return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  }
-  async function check(){
-    msg.textContent='';
-    const value=input.value.trim();
-    if(!value){msg.textContent='Erişim kodunu gir.';return;}
-    button.disabled=true;
-    try{
-      const actual=await digest(value);
-      if(actual===EXPECTED){unlock();}else{msg.textContent='Erişim kodu hatalı.';input.select();}
-    }finally{button.disabled=false;}
-  }
-  if(localStorage.getItem(ACCESS_KEY)==='ok')unlock();
-  button.addEventListener('click',check);
-  input.addEventListener('keydown',e=>{if(e.key==='Enter')check();});
-})();
-</script>
 
 <div id="app"></div>
 <script>
 (()=>{'use strict';
 const KEY='rec.standalone.v1';
-const VERSION='1.12.4';
+const VERSION='1.13.0';
 const CLOUD_CONFIG_KEY='rec.cloud.config.v1';
 const CLOUD_SESSION_KEY='rec.cloud.session.v1';
 const CLOUD_STATE_KEY='rec.cloud.state.v1';
@@ -278,7 +276,25 @@ function recGoogleOAuthUrl(){
   const qp='prompt=select_account';
   return cleanUrl(cloudConfig.url)+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(location.origin+location.pathname)+'&scopes='+encodeURIComponent(scopes)+'&query_params='+encodeURIComponent(qp);
 }
-function cloudGoogleSignIn(){v111ForceCloudConfig();location.assign(recGoogleOAuthUrl());}
+async function cloudGoogleSignIn(){
+  v111ForceCloudConfig();
+  try{
+    const r=await fetch(cleanUrl(cloudConfig.url)+'/auth/v1/settings',{headers:{apikey:cloudConfig.key}});
+    const j=await r.json().catch(()=>({}));
+    const enabled=!!(j?.external?.google||j?.external?.Google);
+    if(!enabled){
+      ui.authError='Google ile giriş şu anda sunucu tarafında etkin değil. E-posta ve parolanla giriş yapabilirsin.';
+      toast('Google girişi henüz etkin değil.');
+      render();
+      return;
+    }
+    location.assign(recGoogleOAuthUrl());
+  }catch(e){
+    ui.authError='Google giriş durumu kontrol edilemedi. E-posta/parola ile giriş yapmayı dene.';
+    toast('Google giriş bağlantısı kontrol edilemedi.');
+    render();
+  }
+}
 async function consumeOAuthCallback(){
   if(!location.hash||!location.hash.includes('access_token='))return false;
   try{
@@ -318,7 +334,7 @@ function saveProject(id){const f=formObj();if(!f.client||!f.name)return toast('M
 function shootView(){const p=project();if(!p)return emptyProject();const list=tl();const current=list.find(x=>x.status==='Devam Ediyor')||list.find(x=>x.status==='Bekliyor');const s=shots();const done=s.filter(x=>x.status==='Çekildi'||x.status==='Favori').length;const pct=s.length?Math.round(done/s.length*100):0;return `<div class="hero"><div class="eyebrow">ÇEKİM GÜNÜ · ${fmtDate(p.shootDate)}</div><h1>${esc(p.client)} — ${esc(p.name)}</h1><p>${esc(p.location)} · ${esc((p.team||[]).join(', '))}</p></div><div class="mobile-shoot"><section class="panel big-task"><div class="eyebrow">ŞİMDİ</div><h2>${esc(current?.title||'Plan tamamlandı')}</h2><p>${current?`${esc(current.time)} · sıradaki göreve hazır ol.`:'Bugünkü timeline tamamlandı.'}</p><div class="actions">${current?btn('Tamamlandı','completeCurrent','btn primary'):''}${btn('Not Ekle','focusNote')}${btn('Sonraki Shot','nextShot')}</div></section><section class="panel"><div class="eyebrow">SHOT İLERLEMESİ</div><div class="kpi">${pct}%</div><div class="progress"><i style="width:${pct}%"></i></div><div class="kpi-label">${done}/${s.length} çekildi</div></section><section class="panel"><div class="eyebrow">GEAR CHECK</div>${gearReadyHtml(p.id,true)}</section></div><div style="height:15px"></div><section class="panel">${sectionTitle('GÜN AKIŞI','Timeline',btn('+ Görev','newTimeline','btn small'))}<div class="timeline">${list.map(x=>`<div class="timeline-item ${x.status==='Tamamlandı'?'done':x.status==='Devam Ediyor'?'current':''}"><div class="time">${esc(x.time)}</div><div class="node"></div><div><h4>${esc(x.title)}</h4><small>${esc(x.status)}</small></div><div class="actions"><button class="btn small" data-cycle-timeline="${x.id}">Durum</button><button class="btn small ghost" data-edit-timeline="${x.id}">Düzenle</button><button class="btn small ghost timeline-delete" data-delete-timeline="${x.id}">Sil</button></div></div>`).join('')||'<div class="empty">Timeline boş.</div>'}</div><div class="quicknote"><textarea id="quickNote" placeholder="Hızlı not… Örn. Shot 12’de focus kaçtı."></textarea><button class="btn primary" data-act="addNote">Not Ekle</button></div><div class="notes">${data.notes.filter(n=>n.projectId===p.id).sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,12).map(n=>`<div class="note"><small>${new Date(n.createdAt).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}</small><div>${esc(n.body)}</div><button class="btn small ghost" data-delete-note="${n.id}">×</button></div>`).join('')}</div></section>`}
 function shotsView(){const p=project();if(!p)return emptyProject();const s=shots();const controls=`<div class="segmented"><button data-shot-view="list" class="${ui.shotView==='list'?'active':''}">Liste</button><button data-shot-view="card" class="${ui.shotView==='card'?'active':''}">Kart</button><button data-shot-view="story" class="${ui.shotView==='story'?'active':''}">Storyboard</button></div>${btn('+ Shot','newShot','btn primary')}`;const prompt=`<section class="story-prompt"><div class="eyebrow">AKILLI STORYBOARD</div><h3>Çekimi anlat, rec. adım adım storyboard çıkarsın.</h3><p>Sahneyi, kişiyi/ürünü, istediğin duygu ve kamera hareketlerini normal cümlelerle yaz. rec. bunu shot sırasına, çekim detaylarına ve karakalem storyboard karelerine dönüştürür.</p><textarea id="storyBrief" placeholder="Örn. Bonne’da kruvasanın hazırlanışını premium bir reel olarak çekmek istiyorum. Önce mekânı görelim, sonra hamurun açılması, tereyağı detayı, fırından çıkış, şefin tabağa alması ve final hero shot. Yavaş kamera hareketleri, 50 fps ve sıcak yakın planlar kullan.">${esc(ui.storyBrief||'')}</textarea><div class="prompt-actions"><span class="hint">Oluşturulan tüm shotlar sonradan tek tek düzenlenebilir.</span><button class="btn primary" data-act="generateStoryboard">Storyboard Oluştur</button></div></section>`;let body='';if(ui.shotView==='list')body=`<div class="table-wrap"><table><thead><tr><th>SHOT</th><th>AD</th><th>KAMERA</th><th>LENS</th><th>FPS</th><th>KADRAJ</th><th>HAREKET</th><th>DURUM</th></tr></thead><tbody>${s.map(x=>`<tr class="clickable" data-edit-shot="${x.id}"><td>${String(x.no).padStart(3,'0')}</td><td><b>${esc(x.name)}</b><br><span class="muted">${esc(x.description)}</span></td><td>${esc(x.camera)}</td><td>${esc(x.lens)}</td><td>${esc(x.fps)}</td><td>${esc(x.framing)}</td><td>${esc(x.movement)}</td><td><span class="pill ${x.status==='Tekrar'?'red':x.status==='Çekildi'?'good':''}">${esc(x.status)}</span></td></tr>`).join('')}</tbody></table></div>`;else if(ui.shotView==='card')body=`<div class="shot-grid">${s.map(x=>`<article class="card shot-card" data-edit-shot="${x.id}"><div><span class="eyebrow">SHOT ${String(x.no).padStart(3,'0')}</span><span class="pill ${x.status==='Tekrar'?'red':x.status==='Çekildi'?'good':''}">${esc(x.status)}</span></div><h3>${esc(x.name)}</h3><p>${esc(x.description)}</p><dl class="meta"><dt>Lens</dt><dd>${esc(x.lens)}</dd><dt>FPS</dt><dd>${esc(x.fps)}</dd><dt>Hareket</dt><dd>${esc(x.movement)}</dd><dt>Destek</dt><dd>${esc(x.support)}</dd></dl></article>`).join('')}</div>`;else body=`<div class="story-sequence">${s.map((x,i)=>`<article class="story-step"><label class="story-step-visual">${x.storyboardImage?`<img src="${x.storyboardImage}" alt="Storyboard ${i+1}">`:`<div class="story-image"><span>Görsel eklemek için tıkla</span></div>`}<input class="hidden" type="file" accept="image/*" data-story-image="${x.id}"></label><div class="story-step-info"><div class="story-step-no">ADIM ${String(i+1).padStart(2,'0')} · SHOT ${String(x.no).padStart(3,'0')}</div><h3>${esc(x.name)}</h3><p>${esc(x.description)}</p><div class="story-tech"><div><small>Lens</small><b>${esc(x.lens)}</b></div><div><small>Kadraj</small><b>${esc(x.framing)}</b></div><div><small>Hareket</small><b>${esc(x.movement)}</b></div><div><small>FPS / Shutter</small><b>${esc(x.fps)} / ${esc(x.shutter)}</b></div><div><small>Destek</small><b>${esc(x.support)}</b></div><div><small>Tahmini süre</small><b>${esc(x.estimatedMinutes)} dk</b></div></div><div class="story-step-actions"><button class="btn small" data-edit-shot="${x.id}">Detayları Düzenle</button></div></div></article>`).join('')}</div>`;return `${sectionTitle('SHOT LIST',p.name,controls)}${prompt}${s.length?body:`<div class="panel empty">Henüz shot yok. Yukarıdaki alana çekimi anlatıp storyboard oluşturabilirsin.</div>`}`}
 function equipmentView(){const p=project();if(!p)return emptyProject();return `<div class="grid two"><section class="panel">${sectionTitle('EKİPMAN','Envanter',btn('+ Ekipman','newEquipment','btn primary small'))}<div class="table-wrap"><table><thead><tr><th>EKİPMAN</th><th>KATEGORİ</th><th>ADET</th><th>DURUM</th><th>NOT</th><th></th></tr></thead><tbody>${data.equipment.map(e=>`<tr><td><b>${esc(e.name)}</b></td><td>${esc(e.category)}</td><td>${e.quantity}</td><td><select class="status-select ${e.status==='Hazır'?'good':e.status==='Eksik'?'red':'warn'}" data-equipment-status="${e.id}"><option ${e.status==='Hazır'?'selected':''}>Hazır</option><option ${e.status==='Bakım'?'selected':''}>Bakım</option><option ${e.status==='Eksik'?'selected':''}>Eksik</option></select></td><td>${esc(e.note||'')}</td><td><button class="equipment-edit" data-edit-equipment="${e.id}" title="Ekipmanı düzenle">•••</button></td></tr>`).join('')}</tbody></table></div></section><section class="panel">${sectionTitle('PROJE','Gear Check',`${btn('Tümünü Ekle','gearAll','btn small')}${btn('Temizle','gearClear','btn small ghost')}`)}${gearReadyHtml(p.id)}<div class="checklist">${gearList(p.id).map(e=>`<label class="check"><input type="checkbox" data-gear-check="${e.id}" ${gearChecked(p.id,e.id)?'checked':''}><span><b>${esc(e.name)}</b><br><small class="muted">${esc(e.category)} · ${e.quantity} adet</small></span></label>`).join('')||'<div class="empty">Bu projeye ekipman eklenmedi. “Tümünü Ekle” ile başlayabilirsin.</div>'}</div><div style="height:18px"></div>${sectionTitle('FİNAL KONTROL','Çekime Hazır Checklist')}<div class="checklist">${['Bataryalar dolu mu?','Kartlar hazır mı?','Lensler temiz mi?','Ses testi yapıldı mı?','Mikrofon pili kontrol edildi mi?','Tripod plate var mı?','ND filtre var mı?','Powerbank var mı?','SSD var mı?','Adres kontrol edildi mi?'].map((x,i)=>`<label class="check"><input type="checkbox" data-final-check="${i}" ${finalChecked(p.id,i)?'checked':''}><span>${x}</span></label>`).join('')}</div></section></div>`}
-function settingsView(){const size=new Blob([JSON.stringify(data)]).size;const email=cloudSession?.user?.email||'';return `<div class="grid two"><section class="panel">${sectionTitle('HESAP','Windows ↔ iPhone')}<div data-cloud-status class="cloud-status ${cloudState.status==='ok'?'ok':cloudState.status==='syncing'?'syncing':cloudState.status==='error'?'error':''}"><i></i>${esc(cloudLabel())}</div>${email?`<div class="row"><div><b>${esc(email)}</b><small>Aynı hesapla iPhone’dan veya başka bir Windows cihazdan giriş yap.</small></div><span class="pill good">Bağlı</span></div><div class="actions"><button class="btn primary" data-act="cloudSync">Şimdi Senkronize Et</button><button class="btn" data-act="cloudSignOut">Çıkış Yap</button></div>`:''}<details class="auth-config" style="margin-top:18px"><summary>Supabase bağlantı ayarları</summary>${cloudConfigFields()}</details><div style="height:16px;border-top:1px solid var(--line);margin-top:16px"></div><div class="eyebrow">WINDOWS GİRİŞ PAROLASI</div><p class="muted small">Google ile giriş yaptıysan burada bir rec. parolası belirle. Böylece Windows uygulamasında aynı Gmail adresi + bu parola ile aynı hesaba girersin.</p><div class="actions"><input id="newRecPassword" type="password" placeholder="En az 8 karakter" style="flex:1;min-width:180px;border:1px solid var(--line);background:#0d0d0f;color:#eee;border-radius:8px;padding:9px"><button class="btn" data-act="cloudSetPassword">Parolayı Kaydet</button></div><p class="cloud-help">rec. hesabın Apple ID’den bağımsızdır. Gmail adresinle oluşturduğun rec. hesabını Windows ve iPhone’da aynı şekilde kullanabilirsin.</p></section><section class="panel">${sectionTitle('GOOGLE','Giriş Yöntemi')}<p class="muted">iPhone/HTTPS sürümünde Google ile tek tık giriş düğmesi kullanılabilir. Windows bağımsız uygulamasında Gmail adresi + rec. parolası güvenilir yedek giriş yöntemidir.</p>${location.protocol!=='file:'?`<button class="btn google-btn" data-act="cloudGoogleSignIn"><span class="google-mark"></span>Google ile devam et</button>`:`<div class="native-note">Mac sürümü Chrome açmadan kendi WebKit penceresinde çalışır. Google, gömülü web görünümlerindeki OAuth akışlarını kısıtlayabildiği için burada Gmail + parola girişi korunur.</div>`}</section><section class="panel">${sectionTitle('IPHONE','Ana Ekrana Kur')}<div class="install-card"><b>1.</b> HTTPS adresini iPhone’da Safari ile aç.<br><br><b>2.</b> Paylaş → <b>Ana Ekrana Ekle</b>.<br><br><b>3.</b> <b>Web Uygulaması Olarak Aç</b> açık kalsın.<br><br><b>4.</b> rec. ikonundan aç ve aynı e-posta hesabıyla giriş yap.</div><p class="cloud-help">Mobilde çekim, shot, storyboard, ekipman, projeler ve teslimler çalışır.</p></section><section class="panel">${sectionTitle('AYARLAR','Yerel Veri')}<div class="row"><div><b>Uygulama</b><small>rec. v${VERSION}</small></div></div><div class="row"><div><b>Yerel kayıt</b><small>Offline kullanım için bu cihazda tutulur</small></div><span class="pill good">Offline-ready</span></div><div class="row"><div><b>Veri boyutu</b><small>${Math.round(size/1024)} KB</small></div></div><div class="actions" style="margin-top:14px">${btn('Yedek İndir','exportData','btn primary')}${btn('Yedek Yükle','importData')}${btn('Yerel Veriyi Sıfırla','resetData','btn danger')}</div><input id="importFile" class="hidden" type="file" accept="application/json"></section></div>`}
+function settingsView(){const size=new Blob([JSON.stringify(data)]).size;const email=cloudSession?.user?.email||'';return `<div class="grid two"><section class="panel">${sectionTitle('HESAP','Windows ↔ iPhone')}<div data-cloud-status class="cloud-status ${cloudState.status==='ok'?'ok':cloudState.status==='syncing'?'syncing':cloudState.status==='error'?'error':''}"><i></i>${esc(cloudLabel())}</div>${email?`<div class="row"><div><b>${esc(email)}</b><small>Aynı hesapla iPhone’dan veya başka bir Windows cihazdan giriş yap.</small></div><span class="pill good">Bağlı</span></div><div class="actions"><button class="btn primary" data-act="cloudSync">Şimdi Senkronize Et</button><button class="btn" data-act="cloudSignOut">Çıkış Yap</button></div>`:''}<details class="auth-config" style="margin-top:18px"><summary>Supabase bağlantı ayarları</summary>${cloudConfigFields()}</details><div style="height:16px;border-top:1px solid var(--line);margin-top:16px"></div><div class="eyebrow">WINDOWS GİRİŞ PAROLASI</div><p class="muted small">Google ile giriş yaptıysan burada bir rec. parolası belirle. Böylece Windows uygulamasında aynı Gmail adresi + bu parola ile aynı hesaba girersin.</p><div class="actions"><input id="newRecPassword" type="password" placeholder="En az 8 karakter" style="flex:1;min-width:180px;border:1px solid var(--line);background:#0d0d0f;color:#eee;border-radius:8px;padding:9px"><button class="btn" data-act="cloudSetPassword">Parolayı Kaydet</button></div><p class="cloud-help">rec. hesabın Apple ID’den bağımsızdır. Gmail adresinle oluşturduğun rec. hesabını Windows ve iPhone’da aynı şekilde kullanabilirsin.</p></section><section class="panel">${sectionTitle('IPHONE','Ana Ekrana Kur')}<div class="install-card"><b>1.</b> HTTPS adresini iPhone’da Safari ile aç.<br><br><b>2.</b> Paylaş → <b>Ana Ekrana Ekle</b>.<br><br><b>3.</b> <b>Web Uygulaması Olarak Aç</b> açık kalsın.<br><br><b>4.</b> rec. ikonundan aç ve aynı e-posta hesabıyla giriş yap.</div><p class="cloud-help">Mobilde çekim, shot, storyboard, ekipman, projeler ve teslimler çalışır.</p></section><section class="panel">${sectionTitle('AYARLAR','Yerel Veri')}<div class="row"><div><b>Uygulama</b><small>rec. v${VERSION}</small></div></div><div class="row"><div><b>Yerel kayıt</b><small>Offline kullanım için bu cihazda tutulur</small></div><span class="pill good">Offline-ready</span></div><div class="row"><div><b>Veri boyutu</b><small>${Math.round(size/1024)} KB</small></div></div><div class="actions" style="margin-top:14px">${btn('Yedek İndir','exportData','btn primary')}${btn('Yedek Yükle','importData')}${btn('Yerel Veriyi Sıfırla','resetData','btn danger')}</div><input id="importFile" class="hidden" type="file" accept="application/json"></section></div>`}
 
 function storyboardPlan(brief,p){const lower=brief.toLocaleLowerCase('tr-TR');const person=/doktor|şef|kişi|insan|röportaj|konuşma|sunucu|çalışan/.test(lower);const product=/ürün|kruvasan|yemek|kahve|tabak|pizza|tatlı|ürünü/.test(lower);const factory=/fabrika|üretim|makine|hat/.test(lower);const event=/konser|etkinlik|fuar|sahne|kalabalık/.test(lower);const gear=data.equipment.filter(e=>e.status==='Hazır').map(e=>e.name).join(' ').toLowerCase();const camera=gear.includes('fx30')?'Sony FX30':'Kamera A';let base;if(factory)base=[['Mekân Establishing','Çekim alanını ve ölçeği kuran geniş açılı giriş.','14mm','Wide','Slow Push In','Gimbal'],['Ana Süreç','Üretim hattındaki ana aksiyonu yönü okunacak şekilde takip et.','24-70mm','Medium Wide','Tracking','Gimbal'],['Operasyon Detayı','El, makine ve işlem detayını ritmik yakın planla göster.','50mm','Close Up','Micro Move','Tripod'],['İnsan / Kontrol','Çalışanın operasyon veya kalite kontrol anını yakala.','50mm','Medium Close Up','Slow Slide','Gimbal'],['Doku / Mekanik Detay','Markayı ve üretim kalitesini anlatan seçici netlik detayları.','50mm','Detail','Static','Tripod'],['Final Hero','Ürün veya fabrikanın güçlü final karesi.','24-70mm','Hero Wide','Slow Push In','Gimbal']];else if(person)base=[['Mekân Establishing','Konuşmanın geçtiği ortamı kısa bir geniş planla kur.','24mm','Wide','Slow Push In','Gimbal'],['Ana Konuşma','Ana kişiyi göz hizasında temiz ve güvenli bir kadrajda çek.','50mm','Medium Close Up','Static','Tripod'],['İkinci Açı','Kurguda kesme noktası yaratacak hafif çapraz ikinci açı.','70mm','Close Up','Static','Tripod'],['El / İş Detayı','Konuşmayı destekleyen el, ürün, ekipman veya masa detayı.','50mm','Detail','Micro Move','Tripod'],['Doğal B-Roll','Kişinin ortamla etkileşimini doğal hareket içinde kaydet.','24-70mm','Medium','Handheld','Handheld'],['Final Portre','Videoyu kapatacak sakin ve güçlü final portresi.','50mm','Medium Close Up','Slow Push In','Gimbal']];else if(product)base=[['Ortam / Giriş','Ürünün bulunduğu ortamı kuran kısa bir establishing.','24mm','Wide','Slow Push In','Gimbal'],['Hazırlık Başlangıcı','Hazırlığın ilk adımını eller ve ana malzeme ile göster.','50mm','Close Up','Handheld','Handheld'],['Doku Detayı','Malzemenin doku, parlaklık ve tazeliğini çok yakın planda göster.','50mm','Detail','Micro Move','Tripod'],['Ana Aksiyon','Kesme, dökme, sıkma veya servis hareketini takip et.','24-70mm','Medium Close Up','Tracking','Gimbal'],['Servis / Reveal','Ürünün tamamlandığı anı kontrollü bir reveal hareketiyle göster.','50mm','Close Up','Slide / Reveal','Gimbal'],['Final Hero','Ürünü temiz arka plan ve premium ışıkla final hero olarak çek.','50mm','Hero Close Up','Slow Orbit','Gimbal']];else if(event)base=[['Mekân Establishing','Mekân, sahne veya fuar alanının ölçeğini kur.','14mm','Ultra Wide','Slow Push In','Gimbal'],['Kalabalık / Atmosfer','İnsan akışını ve enerjiyi geniş-orta planda takip et.','24-70mm','Wide / Medium','Tracking','Gimbal'],['Ana Aksiyon','Sahnedeki veya standdaki temel aksiyonu net biçimde yakala.','70mm','Medium','Pan / Track','Monopod'],['Detaylar','Işıklar, eller, branding ve reaksiyonlardan ritmik detaylar al.','50mm','Close Up','Handheld','Handheld'],['Reaction','İzleyici veya katılımcı tepkisini kısa doğal anlarla kaydet.','70-200mm','Close Up','Static','Monopod'],['Final Atmosfer','Enerjiyi özetleyen geniş final veya çıkış karesi.','24mm','Wide','Pull Out','Gimbal']];else base=[['Establishing','Mekânı ve sahneyi kuran geniş giriş karesi.','24mm','Wide','Slow Push In','Gimbal'],['Ana Aksiyon','Videonun ana hikâyesini taşıyan temel hareket.','24-70mm','Medium','Tracking','Gimbal'],['Yakın Plan','Ana özneyi daha güçlü gösterecek yakın plan.','50mm','Close Up','Static','Tripod'],['Detay','Hikâyeyi destekleyen küçük detay ve dokular.','50mm','Detail','Micro Move','Tripod'],['Alternatif Açı','Kurguda ritim yaratacak farklı yükseklik/açı.','24-70mm','Medium','Handheld','Handheld'],['Final Hero','Hikâyeyi kapatan temiz final karesi.','50mm','Hero','Slow Push In','Gimbal']];const sentences=brief.replace(/[.!?]\s+/g,'\n').split(/\n|\bsonra\b|\bardından\b/i).map(x=>x.trim()).filter(x=>x.length>12);return base.map((x,i)=>({name:x[0],description:sentences[i]||x[1],camera,lens:x[2],framing:x[3],movement:x[4],support:x[5],fps:/slow|yavaş|slow motion|50 fps|50fps/i.test(brief)?50:(i===2||i===3?50:25),shutter:/slow|yavaş|50 fps|50fps/i.test(brief)?'1/100':'1/50',estimatedMinutes:i===0||i===5?5:7,subject:product?'Ürün':person?'Kişi':factory?'Üretim':event?'Etkinlik':'Ana özne'}))}
 function hashNum(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
@@ -1454,6 +1470,28 @@ async function v110JoinWorkspaceCode(code){
   try{const wid=await wsRpc('rec_redeem_workspace_invite',{p_token:code});await wsRefreshCatalog(false);const id=typeof wid==='string'?wid:(Array.isArray(wid)?wid[0]:wid);ui.areaJoinOpen=false;if(id)await selectArea('workspace',id);toast('Workspace’e katıldın.')}catch(e){toast(wsFriendlyError(e))}
 }
 
+
+const REC_THEME_KEY='rec.ui.theme.v1';
+const REC_THEMES=['dark','gray','light'];
+const REC_THEME_LABELS={dark:'Koyu',gray:'Gri',light:'Beyaz'};
+ui.themeMenu=ui.themeMenu||false;
+function recTheme(){
+  const t=localStorage.getItem(REC_THEME_KEY)||'dark';
+  return REC_THEMES.includes(t)?t:'dark';
+}
+function applyRecTheme(t){
+  if(!REC_THEMES.includes(t))t='dark';
+  localStorage.setItem(REC_THEME_KEY,t);
+  document.documentElement.setAttribute('data-rec-theme',t);
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute('content',t==='dark'?'#0b0b0c':t==='gray'?'#d9dade':'#f5f5f6');
+}
+function themeControlHtml(){
+  const t=recTheme(),label=REC_THEME_LABELS[t]||'Koyu';
+  return `<div class="theme-control"><button class="theme-toggle" data-theme-toggle title="Tema: ${esc(label)}"><i>◐</i><b>${esc(label)}</b></button>${ui.themeMenu?`<div class="theme-menu" onclick="event.stopPropagation()">${REC_THEMES.map(x=>`<button class="${x===t?'active':''}" data-theme-set="${x}"><b>${REC_THEME_LABELS[x]}</b><small>${x==='dark'?'Koyu arayüz':x==='gray'?'Yumuşak gri arayüz':'Açık beyaz arayüz'}</small></button>`).join('')}</div>`:''}</div>`;
+}
+applyRecTheme(recTheme());
+
 function v110ProfileButtonHtml(){
   const name=currentDisplayName(),avatar=v110ProfileAvatar(),email=cloudSession?.user?.email||'';
   return `<div class="profile-menu-wrap"><button class="profile-button" data-profile-toggle>${v110AvatarHtml(avatar,name)}<span class="profile-button-text"><b>${esc(name)}</b><small>${esc(startMode==='cloud'?cloudLabel():'Yerel profil')}</small></span><span class="profile-chevron">⌄</span></button>${ui.profileMenu?`<div class="profile-popover" onclick="event.stopPropagation()"><div class="profile-head">${v110AvatarHtml(avatar,name,'lg')}<div><b>${esc(name)}</b><small>${esc(email||'Yerel kullanıcı')}</small><span class="profile-status"><i></i>${esc(startMode==='cloud'?cloudLabel():'Bu cihazda')}</span></div></div><div class="profile-section"><div class="profile-section-title">PROFİL</div><div class="profile-fields"><input id="v110ProfileName" value="${esc(name)}" maxlength="80" placeholder="Profil adı"></div><div class="profile-actions"><button class="btn small primary" data-v110-profile-save>Kaydet</button><label class="btn small avatar-upload-btn">Fotoğraf Ekle<input id="v110ProfilePhoto" type="file" accept="image/*"></label>${avatar?'<button class="btn small" data-v110-profile-photo-remove>Kaldır</button>':''}</div></div>${startMode==='cloud'?`<div class="profile-section"><div class="profile-section-title">HESAP</div><div class="profile-actions"><button class="btn small" data-act="cloudSync">Şimdi Senkronize Et</button><button class="btn small" data-view="settings">Ayarlar</button><button class="btn small danger" data-act="cloudSignOut">Çıkış</button></div></div>`:`<div class="profile-section"><button class="btn small" data-act="cloudConnectNow">Buluta Bağlan</button></div>`}</div>`:''}</div>`;
@@ -1475,7 +1513,7 @@ areaSwitcherHtml=function(){
 const shellV110Base=shell;
 shell=function(body){
   ensureV160();const desktopNav=[['home','Ana Sayfa'],['projects','Projeler'],['calendar','Takvim'],['shoot','Kurgu'],['equipment','Ekipman'],['deliveries','Teslimler']];const mobileNav=[['home','Bugün'],['calendar','Takvim'],['shoot','Kurgu'],['equipment','Ekipman'],['projects','Projeler']];const p=project(),opts=selectableProjects().map(x=>`<option value="${x.id}" ${x.id===p?.id?'selected':''}>${x.status==='Tamamlandı'?'✓ ':''}${esc(x.client)} — ${esc(x.name)}</option>`).join('');
-  return `<div class="app"><aside class="sidebar"><div class="logo">rec<span class="dot">.</span></div><div class="brand-owner">by kalfmedia</div>${areaSwitcherHtml()}<div class="nav">${desktopNav.map(([v,l])=>`<button class="${ui.view===v?'active':''}" data-view="${v}">${l}</button>`).join('')}</div><div class="sidefoot"><a class="kalf-brand-cta" href="https://kalfmedia.com" target="_blank" rel="noreferrer"><span>kalfmedia.com</span><small>Prodüksiyon · Blog · İletişim</small><b>↗</b></a><button data-act="palette">⌘K · Ara / Komut</button><button data-act="openTrash">Çöp Kutusu · ${data.trash.length}</button><button data-view="settings">Ayarlar / Yedek</button></div></aside><main class="main"><header class="topbar"><div class="mobile-only"><div class="logo small">rec<span class="dot">.</span></div></div><div class="desktop-project-switch"><span class="eyebrow">AKTİF PROJE &nbsp;</span><select id="projectSwitch">${opts}</select></div><div class="mobile-project-switch hidden"><select id="projectSwitchMobile">${opts}</select></div><div class="topbar-right">${v110ProfileButtonHtml()}</div></header><div class="content">${body}</div></main><nav class="bottom-nav">${mobileNav.map(([v,l])=>`<button class="${ui.view===v?'active':''}" data-view="${v}">${l}</button>`).join('')}</nav></div>${ui.palette?palette():''}${ui.modal?modal():''}${ui.contextMenu?contextMenu():''}`;
+  return `<div class="app"><aside class="sidebar"><div class="logo">rec<span class="dot">.</span></div><div class="brand-owner">by kalfmedia</div>${areaSwitcherHtml()}<div class="nav">${desktopNav.map(([v,l])=>`<button class="${ui.view===v?'active':''}" data-view="${v}">${l}</button>`).join('')}</div><div class="sidefoot"><a class="kalf-brand-cta" href="https://kalfmedia.com" target="_blank" rel="noreferrer"><span>kalfmedia.com</span><small>Prodüksiyon · Blog · İletişim</small><b>↗</b></a><button data-act="palette">⌘K · Ara / Komut</button><button data-act="openTrash">Çöp Kutusu · ${data.trash.length}</button><button data-view="settings">Ayarlar / Yedek</button></div></aside><main class="main"><header class="topbar"><div class="mobile-only"><div class="logo small">rec<span class="dot">.</span></div></div><div class="desktop-project-switch"><span class="eyebrow">AKTİF PROJE &nbsp;</span><select id="projectSwitch">${opts}</select></div><div class="mobile-project-switch hidden"><select id="projectSwitchMobile">${opts}</select></div><div class="topbar-right">${themeControlHtml()}${v110ProfileButtonHtml()}</div></header><div class="content">${body}</div></main><nav class="bottom-nav">${mobileNav.map(([v,l])=>`<button class="${ui.view===v?'active':''}" data-view="${v}">${l}</button>`).join('')}</nav></div>${ui.palette?palette():''}${ui.modal?modal():''}${ui.contextMenu?contextMenu():''}`;
 };
 
 const workspaceViewV110Base=workspaceView;
@@ -1486,7 +1524,7 @@ workspaceView=function(){
   return h+identity+danger;
 };
 
-// Google Calendar v1.10: desktop uses rec:// callback, PWA/mobile returns to the HTTPS app.
+// Google Calendar removed in v1.13.
 function googleOAuthUrl(){return recGoogleOAuthUrl();}
 const consumeOAuthCallbackV110Base=consumeOAuthCallback;
 consumeOAuthCallback=async function(){return await consumeOAuthCallbackV110Base();};
@@ -1494,6 +1532,8 @@ consumeOAuthCallback=async function(){return await consumeOAuthCallbackV110Base(
 const bindV110Base=bind;
 bind=function(){
   bindV110Base();
+  document.querySelectorAll('[data-theme-toggle]').forEach(b=>b.onclick=e=>{e.stopPropagation();ui.themeMenu=!ui.themeMenu;ui.profileMenu=false;render()});
+  document.querySelectorAll('[data-theme-set]').forEach(b=>b.onclick=e=>{e.stopPropagation();applyRecTheme(b.dataset.themeSet);ui.themeMenu=false;render()});
   document.querySelectorAll('[data-profile-toggle]').forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileMenu=!ui.profileMenu;ui.areaMenu=false;render()});
   document.querySelectorAll('[data-v110-profile-save]').forEach(b=>b.onclick=v110SaveProfile);
   const pf=document.getElementById('v110ProfilePhoto');if(pf)pf.onchange=e=>v110ProfilePhoto(e.target.files?.[0]);
@@ -1516,7 +1556,7 @@ const V111_URL='https://vvacsqbizkkqemiqapzm.supabase.co';
 const V111_KEY='sb_publishable_0_nkufHVSpolkcPPndBvfw__YCNMYRc';
 const V111_INSTALL_MARK='rec.install.clean.v1.11.0';
 const V111_USER_KEYS=[KEY,CLOUD_SESSION_KEY,CLOUD_STATE_KEY,'rec.area.session.v1','rec.personal.cache.v1','rec.profile.avatars.v1','rec.profile.local.v1','rec.workspace.cache.v1','rec.workspace.ctx.v1','rec.google.calendar.v1'];
-ui.authMode=ui.authMode||'login';
+ui.authMode=ui.authMode||'login';ui.authError=ui.authError||'';
 
 function v111ForceCloudConfig(){
   cloudConfig={url:V111_URL,key:V111_KEY};
@@ -1546,7 +1586,7 @@ function v111AuthPassword(){return document.getElementById('cloudPassword')?.val
 
 authScreen=function(){
   const signup=ui.authMode==='signup';
-  return `<div class="auth-screen"><div class="auth-card"><div class="logo">rec<span class="dot">.</span></div><div class="brand-owner">by kalfmedia</div><h1>${signup?'Hesap oluştur':'Hesabına giriş yap'}</h1><p>${signup?'rec. hesabını oluştur; kişisel alanın ve katıldığın Workspace’ler tüm cihazlarında senkronize olsun.':'Projelerine, kişisel alanına ve ekip Workspace’lerine devam et.'}</p><button class="btn google-btn auth-submit" data-act="cloudGoogleSignIn"><span class="google-mark"></span>Google ile devam et</button><div class="auth-divider">veya e-posta ile</div><div class="auth-switch"><button class="${!signup?'active':''}" data-v111-auth-mode="login">Giriş Yap</button><button class="${signup?'active':''}" data-v111-auth-mode="signup">Üye Ol</button></div><div class="form-grid">${signup?`<div class="field full"><label>Ad / profil adı</label><input id="cloudName" autocomplete="name" placeholder="Adın"></div>`:''}<div class="field full"><label>E-posta</label><input id="cloudEmail" type="email" autocomplete="email" placeholder="mail@adresin.com"></div><div class="field full"><label>Parola</label><input id="cloudPassword" type="password" autocomplete="${signup?'new-password':'current-password'}" placeholder="${signup?'En az 6 karakter':'Parolan'}"></div></div><button class="btn primary auth-submit" data-v111-auth-submit>${signup?'Hesap Oluştur':'Giriş Yap'}</button><div class="cloud-auto-badge">Bulut bağlantısı hazır</div><p class="auth-note">${signup?'Google hesabınla veya e-posta/parola ile hesap oluşturabilirsin.':'Google hesabınla veya e-posta/parola ile giriş yapabilirsin.'}</p></div></div>`;
+  return `<div class="auth-screen"><div class="auth-card"><div class="logo">rec<span class="dot">.</span></div><div class="brand-owner">by kalfmedia</div><h1>${signup?'Hesap oluştur':'Hesabına giriş yap'}</h1><p>${signup?'rec. hesabını oluştur; kişisel alanın ve katıldığın Workspace’ler tüm cihazlarında senkronize olsun.':'Projelerine, kişisel alanına ve ekip Workspace’lerine devam et.'}</p><button class="btn google-btn auth-submit" data-act="cloudGoogleSignIn"><span class="google-mark"></span>Google ile devam et</button><div class="auth-divider">veya e-posta ile</div><div class="auth-switch"><button class="${!signup?'active':''}" data-v111-auth-mode="login">Giriş Yap</button><button class="${signup?'active':''}" data-v111-auth-mode="signup">Üye Ol</button></div><div class="form-grid">${signup?`<div class="field full"><label>Ad / profil adı</label><input id="cloudName" autocomplete="name" placeholder="Adın"></div>`:''}<div class="field full"><label>E-posta</label><input id="cloudEmail" type="email" autocomplete="email" placeholder="mail@adresin.com"></div><div class="field full"><label>Parola</label><input id="cloudPassword" type="password" autocomplete="${signup?'new-password':'current-password'}" placeholder="${signup?'En az 6 karakter':'Parolan'}"></div></div><button class="btn primary auth-submit" data-v111-auth-submit>${signup?'Hesap Oluştur':'Giriş Yap'}</button>${ui.authError?`<div class="auth-error" style="margin-top:12px;padding:10px 11px;border:1px solid #6a3430;background:rgba(255,59,48,.08);border-radius:9px;color:#d75d56;font-size:12px">${esc(ui.authError)}</div>`:''}<div class="cloud-auto-badge">Bulut bağlantısı hazır</div><p class="auth-note">${signup?'E-posta/parola ile hesap oluşturabilirsin. Google girişi aktif olduğunda aynı düğmeden Google hesabını da kullanabilirsin.':'E-posta/parolanla giriş yapabilirsin. Google girişi sunucu tarafında aktif olduğunda aynı düğmeden Google hesabını da kullanabilirsin.'}</p></div></div>`;
 };
 
 async function v111LoadOwnCloud(){
@@ -1560,6 +1600,7 @@ async function v111LoadOwnCloud(){
 }
 
 async function v111SignIn(){
+  ui.authError='';
   const email=v111AuthEmail(),password=v111AuthPassword();
   if(!email||!password)return toast('E-posta ve parola gerekli.');
   try{
@@ -1570,10 +1611,11 @@ async function v111SignIn(){
     data.settings.name=n;v110LocalProfile={displayName:n,avatar:String(meta.avatar_url||meta.picture||'')};v110PersistLocalProfile();
     await v111LoadOwnCloud();
     toast('Giriş yapıldı.');render();
-  }catch(e){setCloudStatus('error',e.message);toast(e.message||'Giriş yapılamadı.')}
+  }catch(e){setCloudStatus('error',e.message);ui.authError=e.message||'Giriş yapılamadı.';toast(ui.authError);render()}
 }
 
 async function v111SignUp(){
+  ui.authError='';
   const email=v111AuthEmail(),password=v111AuthPassword(),displayName=v111AuthName()||email.split('@')[0]||'Kullanıcı';
   if(!email||password.length<6)return toast('E-posta ve en az 6 karakter parola gerekli.');
   try{
@@ -1584,7 +1626,7 @@ async function v111SignUp(){
     }else{
       ui.authMode='login';toast('Hesap oluşturuldu. E-posta doğrulama bağlantısını açıp giriş yap.');render();
     }
-  }catch(e){setCloudStatus('error',e.message);toast(e.message||'Hesap oluşturulamadı.')}
+  }catch(e){setCloudStatus('error',e.message);ui.authError=e.message||'Hesap oluşturulamadı.';toast(ui.authError);render()}
 }
 
 cloudSignIn=v111SignIn;
@@ -1610,7 +1652,7 @@ render=function(){
 
 
 
-addEventListener('click',e=>{if(ui.profileMenu&&!e.target.closest('.profile-menu-wrap')){ui.profileMenu=false;requestSafeRender()}});
+addEventListener('click',e=>{let changed=false;if(ui.profileMenu&&!e.target.closest('.profile-menu-wrap')){ui.profileMenu=false;changed=true}if(ui.themeMenu&&!e.target.closest('.theme-control')){ui.themeMenu=false;changed=true}if(changed)requestSafeRender()});
 
 addEventListener('click',e=>{if(ui.contextMenu&&!e.target.closest('[data-context-menu]')){ui.contextMenu=null;render()}});
 addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();ui.palette=!ui.palette;ui.search='';render()}else if(e.key==='Escape'&&(ui.modal||ui.palette)){ui.modal=null;ui.palette=false;render()}});addEventListener('focusout',()=>setTimeout(flushDeferredRender,0));addEventListener('resize',requestSafeRender);addEventListener('online',()=>{requestSafeRender();setTimeout(()=>syncNow(false),250)});addEventListener('offline',requestSafeRender);
