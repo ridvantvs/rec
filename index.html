@@ -158,7 +158,7 @@ html[data-rec-theme="gray"] .kalf-brand-cta,html[data-rec-theme="light"] .kalf-b
 <script>
 (()=>{'use strict';
 const KEY='rec.standalone.v1';
-const VERSION='1.13.1';
+const VERSION='1.13.2';
 const CLOUD_CONFIG_KEY='rec.cloud.config.v1';
 const CLOUD_SESSION_KEY='rec.cloud.session.v1';
 const CLOUD_STATE_KEY='rec.cloud.state.v1';
@@ -1288,11 +1288,81 @@ const AREA_SESSION_KEY='rec.area.session.v1';
 const PERSONAL_CACHE_KEY='rec.personal.cache.v1';
 const GOOGLE_CAL_KEY='rec.google.calendar.disabled';
 let activeArea=(()=>{try{return JSON.parse(sessionStorage.getItem(AREA_SESSION_KEY)||'null')}catch{return null}})();
+let areaSelecting=false, areaReady=false;
 let googleCal=jsonRead(GOOGLE_CAL_KEY,{providerToken:'',providerRefreshToken:'',expiresAt:0,account:'',calendars:[],events:[],rangeKey:'',updatedAt:''});
 let googleCalBusy=false;
 function persistArea(){if(activeArea)sessionStorage.setItem(AREA_SESSION_KEY,JSON.stringify(activeArea));else sessionStorage.removeItem(AREA_SESSION_KEY)}
 function cachePersonalPayload(payload){if(payload&&typeof payload==='object')localStorage.setItem(PERSONAL_CACHE_KEY,JSON.stringify(payload))}
 function cachedPersonalPayload(){return jsonRead(PERSONAL_CACHE_KEY,null)}
+
+// Load the destination before changing the active sync target. A failed read
+// must never leave the previous area's payload attached to another workspace.
+async function areaRead(request){
+  let timer;
+  try{return await Promise.race([request,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('Alan yüklenemedi. Bağlantını kontrol edip tekrar dene.')),15000)})])}
+  finally{clearTimeout(timer)}
+}
+async function selectArea(type,id=''){
+  if(areaSelecting||!sessionValid())return false;
+  if(type!=='personal'&&type!=='workspace')return false;
+  if(type==='workspace'&&!id)return false;
+  areaSelecting=true;
+  const userId=cloudSession.user.id;
+  const previous=activeArea;
+  try{
+    render();
+    const deadline=Date.now()+15000;
+    while(cloudBusy||wsBusy){
+      if(Date.now()>deadline)throw new Error('Senkronizasyon sürüyor. Biraz sonra tekrar dene.');
+      await new Promise(resolve=>setTimeout(resolve,50));
+    }
+    clearTimeout(cloudTimer);
+    if(cloudState.dirty){
+      if(wsCtx.activeId&&wsSchemaStatus!=='ready')throw new Error('Workspace bağlantısı doğrulanamadı. Değişikliklerin bu cihazda korunuyor.');
+      await syncNowV180AreaBase(true);
+      if(cloudState.dirty)throw new Error('Mevcut alanın değişiklikleri henüz senkronize edilemedi. Tekrar dene.');
+    }
+    if(areaReady&&previous?.type==='personal')cachePersonalPayload(data);
+    if(areaReady&&previous?.type==='workspace')cacheWorkspacePayload(previous.id,data);
+    let payload,revision=0,updatedAt='',dirty=false;
+    if(type==='workspace'){
+      const row=await areaRead(wsGetState(id));
+      if(!row)throw new Error('Workspace açılamadı. Erişimini kontrol edip tekrar dene.');
+      payload=row.payload&&Object.keys(row.payload).length?row.payload:seed();
+      revision=Number(row.revision||0);
+      // Preserve changes from an interrupted session in this same area.
+      if(!areaReady&&wsCtx.activeId===id&&cloudState.dirty){payload=data;revision=wsCtx.revision;dirty=true}
+    }else{
+      const row=await areaRead(fetchServerState());
+      payload=row?.payload||seed();updatedAt=row?.updated_at||'';
+      if(!areaReady&&!wsCtx.activeId&&cloudState.dirty){payload=data;dirty=true}
+    }
+    if(!sessionValid()||cloudSession.user.id!==userId)return false;
+    applyWorkspacePayload(payload);
+    wsCtx.activeId=type==='workspace'?id:'';wsCtx.revision=revision;persistWsCtx();
+    wsMembers=[];wsInviteCode='';
+    activeArea=type==='workspace'?{type,id}:{type:'personal'};persistArea();
+    areaReady=true;
+    cloudState={dirty,lastSync:iso(),lastServerUpdated:updatedAt,status:'ok',message:'Alan açıldı'};persistCloudState();
+    if(type==='personal')cachePersonalPayload(data);else cacheWorkspacePayload(id,data);
+    v150Undo=[];v150Redo=[];
+    ui.view='home';ui.workspaceProjectId='';ui.workspaceTab='overview';
+    ui.areaMenu=false;ui.profileMenu=false;ui.areaJoinOpen=false;ui.modal=null;ui.palette=false;ui.contextMenu=null;
+    if(type==='workspace')await areaRead(wsRefreshMembers(false)).catch(()=>{});
+    return true;
+  }catch(e){toast(wsFriendlyError(e));return false}
+  finally{areaSelecting=false;render()}
+}
+function clearAreaChoice(){
+  if(areaSelecting)return;
+  // Keep the loaded context until the next selection so pending edits can sync.
+  activeArea=null;persistArea();ui.areaMenu=false;render();
+}
+const syncNowV180AreaBase=syncNow;
+syncNow=async function(force=false){
+  if(areaSelecting||!areaReady)return false;
+  return syncNowV180AreaBase(force);
+};
 function areaChoiceScreen(){
   const personal=`<button class="area-picker-card" data-area-select="personal"><div class="avatar">${esc(personalAreaName().slice(0,1).toLocaleUpperCase('tr-TR'))}</div><div class="eyebrow">KİŞİSEL ALAN</div><h2>${esc(personalAreaName())}</h2><p>Sadece sana ait projeler, takvim, kurgu ve teslimler.</p><span class="role-badge">Kişisel</span></button>`;
   const workspaces=(wsCatalog||[]).map(w=>`<button class="area-picker-card" data-area-select="workspace" data-area-id="${w.workspace_id}"><div class="avatar">${esc(String(w.name||'W').slice(0,1).toLocaleUpperCase('tr-TR'))}</div><div class="eyebrow">ORTAK ÇALIŞMA ALANI</div><h2>${esc(w.name)}</h2><p>Ekip üyeleriyle yetkilerine göre ortak çalış.</p><span class="role-badge">${esc(ROLE_LABELS[w.role]||w.role)}</span></button>`).join('');
@@ -1384,7 +1454,8 @@ render=function(){
   if(!startMode){document.getElementById('app').innerHTML=startChoiceScreen();bind();return}
   if(startMode==='cloud'&&(!cloudConfigured()||!sessionValid())){document.getElementById('app').innerHTML=authScreen();bind();return}
   if(startMode==='cloud'&&sessionValid()&&!wsCatalogLoaded&&!wsBusy&&Date.now()-wsLastFetch>2500){setTimeout(()=>wsRefreshCatalog(false),0)}
-  if(!activeArea){document.getElementById('app').innerHTML=areaChoiceScreen();bind();return}
+  if(activeArea&&!areaReady&&!areaSelecting){const choice=activeArea;activeArea=null;selectArea(choice.type,choice.id||'');return}
+  if(!activeArea||areaSelecting){document.getElementById('app').innerHTML=areaChoiceScreen();bind();if(areaSelecting){document.querySelectorAll('#app button').forEach(b=>b.disabled=true);document.querySelector('#app h1').textContent='Çalışma alanı açılıyor…'}return}
   if(activeArea.type==='workspace'&&activeArea.id&&wsCtx.activeId!==activeArea.id&&!wsBusy)setTimeout(()=>wsLoadWorkspace(activeArea.id,false),0);
   renderV190Base();
 };
@@ -1570,7 +1641,7 @@ function v111ResetUserLocal({keepSession=false}={}){
   V111_USER_KEYS.forEach(k=>{if(keepSession&&k===CLOUD_SESSION_KEY)return;localStorage.removeItem(k)});
   data=seed();migrate();
   ui.activeProjectId='';ui.view='home';ui.areaMenu=false;ui.profileMenu=false;ui.areaJoinOpen=false;
-  try{activeArea=null}catch{}
+  try{activeArea=null;areaReady=false;persistArea()}catch{}
   try{wsCatalog=[];wsCatalogLoaded=false;wsCtx.activeId='';wsCtx.role='';wsCtx.revision=0}catch{}
   try{googleCal={providerToken:'',providerRefreshToken:'',expiresAt:0,account:'',calendars:[],events:[],rangeKey:'',lastSync:''}}catch{}
 }
@@ -1599,7 +1670,7 @@ async function v111LoadOwnCloud(){
     const row=await fetchServerState();
     if(row?.payload) await pullCloudState(row); else await pushCloudState();
   }catch(e){console.error(e);setCloudStatus('error',e.message||'Senkronizasyon hatası')}
-  try{activeArea=null;localStorage.removeItem('rec.area.session.v1');await wsRefreshCatalog(false)}catch(e){console.error(e)}
+  try{activeArea=null;areaReady=false;persistArea();cachePersonalPayload(data);await wsRefreshCatalog(false)}catch(e){console.error(e)}
 }
 
 async function v111SignIn(){
