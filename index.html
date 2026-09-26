@@ -160,7 +160,7 @@ body.beta-locked #app{display:none!important}
 <script>
 (()=>{'use strict';
 const KEY='rec.standalone.v1';
-const VERSION='1.12.3';
+const VERSION='1.12.4';
 const CLOUD_CONFIG_KEY='rec.cloud.config.v1';
 const CLOUD_SESSION_KEY='rec.cloud.session.v1';
 const CLOUD_STATE_KEY='rec.cloud.state.v1';
@@ -1298,6 +1298,8 @@ const saveV190AreaBase=save;
 save=function(markDirty=true){const r=saveV190AreaBase(markDirty);if(activeArea?.type==='personal')cachePersonalPayload(data);return r};
 
 // Google Calendar (read-only). Native desktop auth returns via rec://auth/callback.
+function persistGoogleCal(){return false}
+async function googleApi(){throw new Error('Google Calendar bu sürümde devre dışı.')}
 function googleCalendarConnected(){return false}
 function googleCalendarDisconnect(){googleCal={providerToken:'',providerRefreshToken:'',expiresAt:0,account:'',calendars:[],events:[],rangeKey:'',updatedAt:''};persistGoogleCal();render();toast(' bağlantısı kaldırıldı.')}
 async function handleNativeOAuthCallback(raw){
@@ -1485,7 +1487,7 @@ workspaceView=function(){
 };
 
 // Google Calendar v1.10: desktop uses rec:// callback, PWA/mobile returns to the HTTPS app.
-googleOAuthUrl=function(){return recGoogleOAuthUrl();};
+function googleOAuthUrl(){return recGoogleOAuthUrl();}
 const consumeOAuthCallbackV110Base=consumeOAuthCallback;
 consumeOAuthCallback=async function(){return await consumeOAuthCallbackV110Base();};
 
